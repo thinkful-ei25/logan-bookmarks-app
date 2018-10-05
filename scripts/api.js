@@ -7,7 +7,7 @@ const api = (function(){
     $.getJSON(`${BASE_URL}/bookmarks`, callback);
   };
 
-  const createBookmark = function(item, callback){
+  const createBookmark = function(item,  callback, ifError){
     console.log('new item added= ' + item);
     //let newBookmark = JSON.stringify(item);
     $.ajax({
@@ -16,7 +16,9 @@ const api = (function(){
       contentType: 'application/json',
       data: item,
       dataType : 'json',
-      success: callback
+      success: callback,
+      error:  ifError
+    
     });
   };
 
@@ -27,7 +29,7 @@ const api = (function(){
         method : 'DELETE', 
         dataType : 'json',
         contentType : 'application/json',
-        success : callback
+        success : callback,
       }
     ); 
 

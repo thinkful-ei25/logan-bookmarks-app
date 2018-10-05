@@ -63,6 +63,20 @@ const bookmarks = (function(){
     bookmarks = items.map(item => generateBookmarks(item));
     return bookmarks.join(''); 
   }
+  function generateError(err) {
+    let message = '';
+    if (err.responseJSON && err.responseJSON.message) {
+      message = err.responseJSON.message;
+    } else {
+      message = `${err.code} Server Error`;
+    }
+
+    return `
+      <section class="error-content">
+        <p>${message}<button id="cancel-error">X</button></p>
+      </section>
+    `;
+  }
 
   function handleAddBookmarkButton(){
     $('.js-add-bookmark-button').click(function(){
@@ -93,11 +107,14 @@ const bookmarks = (function(){
       // };
       //console.log('newBookmark:         ' + newBookmark);
 
-      api.createBookmark(newBookmark,(bookmark) =>{
+      api.createBookmark(newBookmark, (bookmark) =>{
         store.addItem(bookmark);
         render();
+      },(error) =>{
+        console.log(error);
+        store.setErrorMessage(error);
+        render();
       });
-      store.isAddingItem = false;
     });
   }
   // create item extra
@@ -107,7 +124,7 @@ const bookmarks = (function(){
       if(!this.is('form')) throw new TypeError('Must provide form, not a form type');
 
       const formData = new FormData(this[0]);
-      console.log('formData   : ' + formData)
+      console.log('formData   : ' + formData);
       const jsonObj = {};
       formData.forEach((val, name) => {
         jsonObj[name]=val;
@@ -134,7 +151,7 @@ const bookmarks = (function(){
       console.log('delete button pressed');
       const bookmarkId = getId(event.currentTarget);
       console.log(bookmarkId);
-      api.deleteBookmark(bookmarkId,function(){
+      api.deleteBookmark(bookmarkId, function(){
         store.findAndDelete(bookmarkId);
         render();
       });
@@ -161,13 +178,28 @@ const bookmarks = (function(){
       render();
     });
   }
+
+
+  function handleCloseError() {
+    $('.error').on('click', '#cancel-error', () => {
+      store.setErrorMessage(null);
+      render();
+    });
+  }
+
   function render(){ 
+    if (store.error) {
+      const el = generateError(store.error);
+      $('.error').html(el);
+    } else {
+      $('.error').empty();
+    }
     console.log('render ran');
     let items = store.items;  
     console.log(items);
-    
 
-    if (store.isAddingItem === true){
+    // generate adding form
+    if (store.isAddingItem){
       $('.adding-section').html(generateAddingForm());
     } else {
       $('.adding-section').html('');
@@ -179,6 +211,7 @@ const bookmarks = (function(){
       console.log(items);
     }
     const bookmarkItems = generateBookmarkString(items);
+
     $('.bookmarks-list').html(bookmarkItems);
   }
   
@@ -190,10 +223,11 @@ const bookmarks = (function(){
     handleDeleteBookmarkButton();
     handleVisitSiteButton();
     handleFilterRatings();
+    handleCloseError();
   }
 
   return {
     render,
-    bindEventListeners
+    bindEventListeners,
   };
 }());

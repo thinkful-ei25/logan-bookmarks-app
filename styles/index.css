@@ -25,6 +25,21 @@ ul, li{
   list-style-type: none;
 }
 
-#adding-form{
-  border-color: black;
+
+.error{
+  border-width: 3px;
+  margin: auto;
+  width: 50%;
+  
+}
+.error-content {
+  color: red;
+
+
+
+}
+
+.error-content button {
+  position: relative;
+  color: black;
 }

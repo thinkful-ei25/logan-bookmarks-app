@@ -27,11 +27,16 @@ const store =(function(){
     
   };
 
+  const setErrorMessage = function(error){
+    this.error = error;
+  };
+
   return {
     //variables
     items: [],
     isAddingItem: false,
     filterByRating: 0,
+    error: null,
    
 
     //functions
@@ -40,6 +45,7 @@ const store =(function(){
     addIsCondensed,
     toggleIsCondensed,
     findAndDelete,
-    filterBookmarksValue
+    filterBookmarksValue,
+    setErrorMessage
   };
 }());
