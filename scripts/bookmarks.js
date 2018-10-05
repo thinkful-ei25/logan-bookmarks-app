@@ -3,12 +3,14 @@
 
 const bookmarks = (function(){
   function generateBookmarks(bookmark){
+    let ratingStars = createStars(bookmark);
+    console.log(ratingStars);
     if (bookmark.isCondensed){
       return `
         <li class="js-item-element" data-bookmark-id="${bookmark.id}">
           <div class="condensed">
             <p id="title-text">Title: ${bookmark.title}</p>
-            <p id="rating-text">Rating: ${bookmark.rating}</p>
+            <p id="rating-text">Rating: ${ratingStars}</p>
           </div>
         </li>
     `; 
@@ -17,9 +19,8 @@ const bookmarks = (function(){
       <li class="js-item-element" data-bookmark-id="${bookmark.id}">
         <div class="noncondensed">
           <p id="title-text">Title: ${bookmark.title}</p>
-          <p id="rating-text">Rating: ${bookmark.rating}</p>
+          <p id="rating-text">Rating: ${ratingStars}</p>
           <p id="description-text">Description: ${bookmark.desc}</p>
-          <p id="url-text">URL: ${bookmark.url}</p>
           <button id="visit-site-button">visit site</button>
           <button id="delete-button">delete</button>
           
@@ -27,6 +28,20 @@ const bookmarks = (function(){
       </li>
       `;
     
+  }
+  function createStars(bookmark){
+    let rating = bookmark.rating;
+    if (rating === 5){
+      return '★★★★★';
+    } else if (rating === 4){
+      return '★★★★';
+    } else if (rating === 3){
+      return '★★★';
+    } else if (rating === 2){
+      return '★★';
+    } else {
+      return '★';
+    }
   }
   function generateAddingForm(){
     return`
@@ -44,11 +59,11 @@ const bookmarks = (function(){
             <li class="adding-li"><input type="url" id="adding-url" name="url" placeholder="https://..."></li>
             <label for="adding-rating" name="">Rating: </label>
             <select id="adding-rating" name="rating">
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
+              <option value="1">★</option>
+              <option value="2">★★</option>
+              <option value="3">★★★</option>
+              <option value="4">★★★★</option>
+              <option value="5">★★★★★</option>
             </select>
           </div>
           <div>
