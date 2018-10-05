@@ -74,13 +74,14 @@ const bookmarks = (function(){
     $('.adding-section').on('submit','#adding-form', event => {
       event.preventDefault();
       console.log('addbutton ran');
-
-      const newBookmark = {
-        title :  $('#adding-title').val(),
-        url :  $('#adding-url').val(),
-        desc : $('#adding-description').val(),
-        rating : $('#adding-rating').val()
-      };
+      const newBookmark = $(event.target).serializeJson();
+      
+      // const newBookmark = {
+      //   title :  $('#adding-title').val(),
+      //   url :  $('#adding-url').val(),
+      //   desc : $('#adding-description').val(),
+      //   rating : $('#adding-rating').val()
+      // };
       console.log('newBookmark:         ' + newBookmark);
 
       api.createBookmark(newBookmark,(bookmark) =>{
@@ -89,6 +90,21 @@ const bookmarks = (function(){
       });
     });
   }
+
+  $.fn.extend({
+    serializeJson:  function seralizeJson(){
+      //checks if its a form
+      if(!this.is('form')) throw new TypeError('Must provide form, not a form type');
+
+      const formData = new FormData(this[0]);
+  
+      const jsonObj = {};
+      formData.forEach((val, name) => {
+        jsonObj[name]=val;
+      });
+      return JSON.stringify(jsonObj);
+    }
+  });
 
   function render(){ 
     console.log('render ran');
