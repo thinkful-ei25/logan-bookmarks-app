@@ -15,7 +15,7 @@ const bookmarks = (function(){
     <li class="js-item-element" data-bookmark-id="${bookmark.id}">
       <div class="noncondensed">
         <p>Title = ${bookmark.title} &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Rating = ${bookmark.rating}</br> Description = ${bookmark.desc}</br> URL = ${bookmark.url}</p>
-        <button>delete</button>
+        <button id="delete-button">delete</button>
       </div>
     </li>
     `;
@@ -67,7 +67,7 @@ const bookmarks = (function(){
   function handleAddBookmarkButton(){
     $('.js-add-bookmark-button').click(function(){
       store.isAddingItem = true;
-      
+
       render();
     });
   }
@@ -118,16 +118,28 @@ const bookmarks = (function(){
 
   function handleBookmarkCondensed() {
     $('.bookmarks-list').on('click','.js-item-element', event =>{
-      console.log('bookmark clicked');
+      //console.log('bookmark clicked');
       const bookmarkId = getId(event.currentTarget);
-      console.log(bookmarkId);
+      //console.log(bookmarkId);
       let bookmark = store.items.find(item => item.id === bookmarkId);
-      console.log(bookmark);
+      //console.log(bookmark);
       store.toggleIsCondensed(bookmark);
       render();
     });
   }
 
+  function handleDeleteBookmarkButton(){
+    $('.bookmarks-list').on('click','#delete-button', event =>{
+      event.preventDefault();
+      console.log('delete button pressed');
+      const bookmarkId = getId(event.currentTarget);
+      console.log(bookmarkId);
+      api.deleteBookmark(bookmarkId,function(){
+        store.findAndDelete(bookmarkId);
+        render();
+      });
+    });
+  }
   function render(){ 
     console.log('render ran');
     let items = store.items; 
@@ -148,6 +160,7 @@ const bookmarks = (function(){
     handleCancelButtonOnAdd();
     handleSubmitButtonOnAdd();
     handleBookmarkCondensed();
+    handleDeleteBookmarkButton();
   }
 
   return {

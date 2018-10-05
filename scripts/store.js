@@ -18,6 +18,11 @@ const store =(function(){
     item.isCondensed = !item.isCondensed;
   };
 
+  const findAndDelete = function(id) {
+    this.items = this.items.filter(item => item.id !== id);
+  };
+
+
   return {
     //variables
     items: [],
@@ -28,7 +33,8 @@ const store =(function(){
     addItem,
     findById,
     addIsCondensed,
-    toggleIsCondensed
+    toggleIsCondensed,
+    findAndDelete
     //filterByRating: 0,
 
   };
