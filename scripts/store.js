@@ -22,11 +22,16 @@ const store =(function(){
     this.items = this.items.filter(item => item.id !== id);
   };
 
+  const filterBookmarksValue = function(rating){
+    this.filterByRating = rating;
+    
+  };
 
   return {
     //variables
     items: [],
     isAddingItem: false,
+    filterByRating: 0,
    
 
     //functions
@@ -34,8 +39,7 @@ const store =(function(){
     findById,
     addIsCondensed,
     toggleIsCondensed,
-    findAndDelete
-    //filterByRating: 0,
-
+    findAndDelete,
+    filterBookmarksValue
   };
 }());

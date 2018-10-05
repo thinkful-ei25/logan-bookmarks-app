@@ -3,12 +3,12 @@
 const api = (function(){
   const BASE_URL = 'https://thinkful-list-api.herokuapp.com/logan';
   const getBookmarks = function(callback){
-    console.log('connecting to API');
+    //console.log('connecting to API');
     $.getJSON(`${BASE_URL}/bookmarks`, callback);
   };
 
   const createBookmark = function(item, callback){
-    console.log(item);
+    console.log('new item added= ' + item);
     //let newBookmark = JSON.stringify(item);
     $.ajax({
       url: `${BASE_URL}/bookmarks`,

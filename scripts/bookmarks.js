@@ -61,14 +61,12 @@ const bookmarks = (function(){
   function generateBookmarkString(items) { 
     let bookmarks = [];
     bookmarks = items.map(item => generateBookmarks(item));
-
     return bookmarks.join(''); 
   }
 
   function handleAddBookmarkButton(){
     $('.js-add-bookmark-button').click(function(){
       store.isAddingItem = true;
-
       render();
     });
   }
@@ -93,12 +91,13 @@ const bookmarks = (function(){
       //   desc : $('#adding-description').val(),
       //   rating : $('#adding-rating').val()
       // };
-      console.log('newBookmark:         ' + newBookmark);
+      //console.log('newBookmark:         ' + newBookmark);
 
       api.createBookmark(newBookmark,(bookmark) =>{
         store.addItem(bookmark);
         render();
       });
+      store.isAddingItem = false;
     });
   }
   // create item extra
@@ -152,11 +151,21 @@ const bookmarks = (function(){
       render();
     });
   }
+
+  function handleFilterRatings(){
+    $('.filtering').change(()=>{
+      console.log('rating filter selected');
+      //console.log($('.filtering option:selected').val());
+      store.filterBookmarksValue($('.filtering option:selected').val());
+      //console.log(store.filterByRating);
+      render();
+    });
+  }
   function render(){ 
     console.log('render ran');
-    let items = store.items; 
+    let items = store.items;  
     console.log(items);
-    const bookmarkItems = generateBookmarkString(items);
+    
 
     if (store.isAddingItem === true){
       $('.adding-section').html(generateAddingForm());
@@ -164,9 +173,15 @@ const bookmarks = (function(){
       $('.adding-section').html('');
     }
 
+    // filter rating
+    if(store.filterByRating > 1){
+      items = store.items.filter(item => item.rating >= store.filterByRating);
+      console.log(items);
+    }
+    const bookmarkItems = generateBookmarkString(items);
     $('.bookmarks-list').html(bookmarkItems);
   }
-
+  
   function bindEventListeners(){
     handleAddBookmarkButton();
     handleCancelButtonOnAdd();
@@ -174,6 +189,7 @@ const bookmarks = (function(){
     handleBookmarkCondensed();
     handleDeleteBookmarkButton();
     handleVisitSiteButton();
+    handleFilterRatings();
   }
 
   return {
