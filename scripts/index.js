@@ -7,6 +7,7 @@ $(document).ready(function() {
 
   api.getBookmarks((items) => {
     items.forEach(item => store.addItem(item));
+    store.addIsCondensed();
     bookmarks.render();
   });
 });

@@ -10,14 +10,25 @@ const store =(function(){
     return this.items.find(item => item.id === id);
   }; 
 
+  const addIsCondensed = function(){
+    this.items.map(item => item.isCondensed = true);
+  };
+
+  const toggleIsCondensed = function(item){
+    item.isCondensed = !item.isCondensed;
+  };
+
   return {
     //variables
     items: [],
     isAddingItem: false,
+   
 
     //functions
     addItem,
     findById,
+    addIsCondensed,
+    toggleIsCondensed
     //filterByRating: 0,
 
   };

@@ -2,24 +2,24 @@
 /* global api, store */
 
 const bookmarks = (function(){
-  function generateCondensedBookmarks(bookmark){
-    return`
-        <li class="js-item-element" data-item-id="${bookmark.id}">
+  function generateBookmarks(bookmark){
+    if (bookmark.isCondensed === true){
+      return`
+        <li class="js-item-element" data-bookmark-id="${bookmark.id}">
           <div class="condensed">
             <p>Title = ${bookmark.title} &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Rating = ${bookmark.rating}</p>
           </div>
         </li>
-    `;
-  }
-  function generateNoncondensedBookmarks(bookmark){
-    return`
-    <li class="js-item-element" data-item-id="${bookmark.id}">
-      <div class="noncondensed"
+    `;} else if (bookmark.isCondensed === false){
+      return`
+    <li class="js-item-element" data-bookmark-id="${bookmark.id}">
+      <div class="noncondensed">
         <p>Title = ${bookmark.title} &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Rating = ${bookmark.rating}</br> Description = ${bookmark.desc}</br> URL = ${bookmark.url}</p>
         <button>delete</button>
       </div>
     </li>
     `;
+    }
   }
   function generateAddingForm(){
     return`
@@ -50,14 +50,24 @@ const bookmarks = (function(){
       </form>
     `;
   }
-  function generateBookmarkString(bookmarks) { 
-    let items = bookmarks.map(item => generateCondensedBookmarks(item)); 
-    return items.join(''); 
+
+  const getId = function(bookmark) {
+    return $(bookmark)
+      .closest('.js-item-element')
+      .data('bookmark-id');
+  };
+
+  function generateBookmarkString(items) { 
+    let bookmarks = [];
+    bookmarks = items.map(item => generateBookmarks(item));
+
+    return bookmarks.join(''); 
   }
 
   function handleAddBookmarkButton(){
     $('.js-add-bookmark-button').click(function(){
       store.isAddingItem = true;
+      
       render();
     });
   }
@@ -90,7 +100,7 @@ const bookmarks = (function(){
       });
     });
   }
-
+  // create item extra
   $.fn.extend({
     serializeJson:  function seralizeJson(){
       //checks if its a form
@@ -105,6 +115,18 @@ const bookmarks = (function(){
       return JSON.stringify(jsonObj);
     }
   });
+
+  function handleBookmarkCondensed() {
+    $('.bookmarks-list').on('click','.js-item-element', event =>{
+      console.log('bookmark clicked');
+      const bookmarkId = getId(event.currentTarget);
+      console.log(bookmarkId);
+      let bookmark = store.items.find(item => item.id === bookmarkId);
+      console.log(bookmark);
+      store.toggleIsCondensed(bookmark);
+      render();
+    });
+  }
 
   function render(){ 
     console.log('render ran');
@@ -125,6 +147,7 @@ const bookmarks = (function(){
     handleAddBookmarkButton();
     handleCancelButtonOnAdd();
     handleSubmitButtonOnAdd();
+    handleBookmarkCondensed();
   }
 
   return {
