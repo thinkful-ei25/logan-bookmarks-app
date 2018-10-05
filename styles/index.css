@@ -1,5 +1,22 @@
+*{
+  box-sizing:border-box;
+}
+h1{
+  font-weight: 600;
+  font-size: 75px;
+  text-align: center;
+}
+body{
+  font-family: 'Roboto', sans-serif;
+}
 .container{
-  background: red;
-  width: 500px;
-  height: 500px;
+  background: lightgreen;
+}
+.js-buttons-and-filtering{
+  padding: 20px;
+}
+.filter{
+  text-align: right;
+  margin-right: 5px;
+  float: right;
 }

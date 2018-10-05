@@ -1,7 +1,11 @@
 'use strict';
+/* global api, store, bookmarks */
 $(document).ready(function() {
-  console.log('document ready');
-  $('.container').on('click', () => {
-    $('.container').css('background','yellow');
+
+  //bookmarks.bindEventListeners();
+
+  api.getBookmarks((items) => {
+    items.forEach(item => store.addItem(item));
+    bookmarks.render();
   });
 });
