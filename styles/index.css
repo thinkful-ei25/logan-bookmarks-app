@@ -1,42 +1,85 @@
 *{
   box-sizing:border-box;
+  font-family: 'Roboto', sans-serif;
 }
+/*buttons*/
+button{
+  border-radius:5px;
+  text-decoration:none;
+  color:#FFFFFF;
+  background-color:black;
+  text-align: center;
+  transition: all 0.2s;
+}
+button:hover{
+  background-color:grey;
+}
+#filter-label-text, #title-text, #rating-text, #description-text, #url-text{
+  font-weight: bold;
+}
+
+/* on index.html */
 h1{
   font-weight: 600;
   font-size: 75px;
   text-align: center;
 }
-body{
-  font-family: 'Roboto', sans-serif;
-}
 .container{
- 
+  width: 80%;
+  margin: 0 auto;
+  border: 3px solid black;
+  border-radius: 8px;
 }
+
 .js-buttons-and-filtering{
-  padding: 20px;
+  width: 50%;
+  margin: 0 auto;
+  padding-bottom: 50px;
 }
+
 .filter{
   text-align: right;
-  margin-right: 5px;
   float: right;
+}
+/*adding-form */
+#adding-form {
+  text-align: center;
+}
+
+/*separator*/
+#separator{
+  height: 1px;
+  width: 100%;
+  border: 5px solid lightgray;
+}
+
+/*bookmarks-list*/
+.bookmarks-list{
+  text-align: center;
+  width: 40%;
+  margin: 0 auto;
+  padding-top: 50px;
+  padding-bottom: 50px;
+ 
+}
+
+.bookmarks-list > li{
+  border: 3px solid grey;
+  border-radius: 4px;
+  margin-bottom: 3px;
 }
 
 ul, li{
   list-style-type: none;
 }
-
-
+/* error message */
 .error{
   border-width: 3px;
-  margin: auto;
-  width: 50%;
-  
+  margin: 0 auto;
+  width: 65%;  
 }
 .error-content {
   color: red;
-
-
-
 }
 
 .error-content button {

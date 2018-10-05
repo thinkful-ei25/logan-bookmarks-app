@@ -3,29 +3,35 @@
 
 const bookmarks = (function(){
   function generateBookmarks(bookmark){
-    if (bookmark.isCondensed === true){
-      return`
+    if (bookmark.isCondensed){
+      return `
         <li class="js-item-element" data-bookmark-id="${bookmark.id}">
           <div class="condensed">
-            <p>Title = ${bookmark.title} &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Rating = ${bookmark.rating}</p>
+            <p id="title-text">Title: ${bookmark.title}</p>
+            <p id="rating-text">Rating: ${bookmark.rating}</p>
           </div>
         </li>
-    `;} else if (bookmark.isCondensed === false){
-      return`
-    <li class="js-item-element" data-bookmark-id="${bookmark.id}">
-      <div class="noncondensed">
-        <p>Title = ${bookmark.title} &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Rating = ${bookmark.rating}</br> Description = ${bookmark.desc}</br> URL = ${bookmark.url}</p>
-        <button id="delete-button">delete</button>
-        <button id="visit-site-button">visit site</button>
-      </div>
-    </li>
-    `;
+    `; 
     }
+    return `
+      <li class="js-item-element" data-bookmark-id="${bookmark.id}">
+        <div class="noncondensed">
+          <p id="title-text">Title: ${bookmark.title}</p>
+          <p id="rating-text">Rating: ${bookmark.rating}</p>
+          <p id="description-text">Description: ${bookmark.desc}</p>
+          <p id="url-text">URL: ${bookmark.url}</p>
+          <button id="visit-site-button">visit site</button>
+          <button id="delete-button">delete</button>
+          
+        </div>
+      </li>
+      `;
+    
   }
   function generateAddingForm(){
     return`
     <form id="adding-form">
-        <fieldset>
+        <fieldset id="adding-form-fieldset">
         <legend>Add Bookmark</legend>
           <div>
             <label for="adding-title">Title</label>
@@ -45,8 +51,10 @@ const bookmarks = (function(){
               <option value="5">5</option>
             </select>
           </div>
-          <button type="submit" id="submit-new-bookmark">Submit</button>
-          <button type="button" id="cancel-bookmark">Cancel</button>
+          <div>
+            <button type="submit" id="submit-new-bookmark">Submit</button>
+            <button type="button" id="cancel-bookmark">Cancel</button>
+          </div>
           </fieldset>
       </form>
     `;
@@ -59,18 +67,15 @@ const bookmarks = (function(){
   };
 
   function generateBookmarkString(items) { 
-    let bookmarks = [];
-    bookmarks = items.map(item => generateBookmarks(item));
+    const bookmarks = items.map(item => generateBookmarks(item));
     return bookmarks.join(''); 
   }
+
   function generateError(err) {
     let message = '';
     if (err.responseJSON && err.responseJSON.message) {
       message = err.responseJSON.message;
-    } else {
-      message = `${err.code} Server Error`;
     }
-
     return `
       <section class="error-content">
         <p>${message}<button id="cancel-error">X</button></p>
@@ -81,6 +86,8 @@ const bookmarks = (function(){
   function handleAddBookmarkButton(){
     $('.js-add-bookmark-button').click(function(){
       store.isAddingItem = true;
+      $('.js-add-bookmark-button').hide();
+      $('.filter').hide();
       render();
     });
   }
@@ -89,6 +96,8 @@ const bookmarks = (function(){
     $('.adding-section').on('click', '#cancel-bookmark', () =>{
       console.log('cancelbookmark ran');
       store.isAddingItem = false;
+      $('.js-add-bookmark-button').show();
+      $('.filter').show();
       render();
     });
   }
@@ -105,10 +114,14 @@ const bookmarks = (function(){
       //   desc : $('#adding-description').val(),
       //   rating : $('#adding-rating').val()
       // };
-      //console.log('newBookmark:         ' + newBookmark);
+      console.log('newBookmark:         ' + newBookmark);
 
       api.createBookmark(newBookmark, (bookmark) =>{
         store.addItem(bookmark);
+        store.isAddingItem = false;
+        store.addIsCondensed(bookmark);
+        $('.js-add-bookmark-button').show();
+        $('.filter').show();
         render();
       },(error) =>{
         console.log(error);
@@ -179,7 +192,6 @@ const bookmarks = (function(){
     });
   }
 
-
   function handleCloseError() {
     $('.error').on('click', '#cancel-error', () => {
       store.setErrorMessage(null);
@@ -188,13 +200,15 @@ const bookmarks = (function(){
   }
 
   function render(){ 
+    //error handling
+
     if (store.error) {
-      const el = generateError(store.error);
-      $('.error').html(el);
+      const error = generateError(store.error);
+      $('.error').html(error);
     } else {
       $('.error').empty();
     }
-    console.log('render ran');
+    
     let items = store.items;  
     console.log(items);
 
@@ -210,6 +224,9 @@ const bookmarks = (function(){
       items = store.items.filter(item => item.rating >= store.filterByRating);
       console.log(items);
     }
+
+    //render bookmarks to dom
+    console.log('render ran');
     const bookmarkItems = generateBookmarkString(items);
 
     $('.bookmarks-list').html(bookmarkItems);
