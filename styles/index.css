@@ -10,7 +10,7 @@ body{
   font-family: 'Roboto', sans-serif;
 }
 .container{
-  background: lightgreen;
+ 
 }
 .js-buttons-and-filtering{
   padding: 20px;
@@ -19,4 +19,12 @@ body{
   text-align: right;
   margin-right: 5px;
   float: right;
+}
+
+ul, li{
+  list-style-type: none;
+}
+
+#adding-form{
+  border-color: black;
 }
