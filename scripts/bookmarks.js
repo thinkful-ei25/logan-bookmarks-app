@@ -16,6 +16,7 @@ const bookmarks = (function(){
       <div class="noncondensed">
         <p>Title = ${bookmark.title} &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Rating = ${bookmark.rating}</br> Description = ${bookmark.desc}</br> URL = ${bookmark.url}</p>
         <button id="delete-button">delete</button>
+        <button id="visit-site-button">visit site</button>
       </div>
     </li>
     `;
@@ -121,7 +122,7 @@ const bookmarks = (function(){
       //console.log('bookmark clicked');
       const bookmarkId = getId(event.currentTarget);
       //console.log(bookmarkId);
-      let bookmark = store.items.find(item => item.id === bookmarkId);
+      let bookmark = store.findById(bookmarkId);
       //console.log(bookmark);
       store.toggleIsCondensed(bookmark);
       render();
@@ -138,6 +139,17 @@ const bookmarks = (function(){
         store.findAndDelete(bookmarkId);
         render();
       });
+    });
+  }
+
+  function handleVisitSiteButton(){
+    $('.bookmarks-list').on('click','#visit-site-button', event =>{
+      event.preventDefault();
+      console.log('visit site pressed');
+      const bookmarkId = getId(event.currentTarget);
+      let bookmark = store.findById(bookmarkId);
+      window.open(bookmark.url);
+      render();
     });
   }
   function render(){ 
@@ -161,6 +173,7 @@ const bookmarks = (function(){
     handleSubmitButtonOnAdd();
     handleBookmarkCondensed();
     handleDeleteBookmarkButton();
+    handleVisitSiteButton();
   }
 
   return {
