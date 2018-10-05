@@ -30,13 +30,13 @@ const bookmarks = (function(){
             <label for="adding-title">Title</label>
             <li class="adding-li"><input type="text" id="adding-title" name="title" placeholder=""></li>
             <label for="adding-description">Description</label>
-            <li class="adding-li"><textarea id="adding-description" name="description" placeholder=""></textarea>
+            <li class="adding-li"><textarea id="adding-description" name="desc" placeholder=""></textarea>
           </div>
           <div>
             <label for="adding-url">URL</label>
             <li class="adding-li"><input type="url" id="adding-url" name="url" placeholder="https://..."></li>
-            <label for="adding-rating">Rating: </label>
-            <select id="adding-rating">
+            <label for="adding-rating" name="">Rating: </label>
+            <select id="adding-rating" name="rating">
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -97,7 +97,7 @@ const bookmarks = (function(){
       if(!this.is('form')) throw new TypeError('Must provide form, not a form type');
 
       const formData = new FormData(this[0]);
-  
+      console.log('formData   : ' + formData)
       const jsonObj = {};
       formData.forEach((val, name) => {
         jsonObj[name]=val;
